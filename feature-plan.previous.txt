@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "current_feature": "project-skeleton",
+  "features": [
+    {
+      "id": "project-skeleton",
+      "title": "FastAPI + React skeleton with SQLite, Docker, CI, auth scaffold",
+    "status": "done",
+    "acceptance": [
+      "FastAPI app starts at /api/health",
+      "React app builds and serves",
+      "SQLite database with migrations",
+      "Dockerfiles for backend/frontend",
+      "docker-compose with Keycloak",
+      "CI workflow runs backend/frontend tests",
+      "README with install/run/test steps"
+    ],
+    "implementation": [
+      "backend/app/main.py",
+      "backend/app/api/health.py",
+      "backend/app/core/config.py",
+      "backend/app/core/database.py",
+      "backend/app/models/__init__.py",
+      "backend/requirements.txt",
+      "backend/tests/test_health.py",
+      "frontend/package.json",
+      "frontend/tsconfig.json",
+      "frontend/vite.config.ts",
+      "frontend/index.html",
+      "frontend/src/main.tsx",
+      "frontend/src/App.tsx",
+      "frontend/src/index.css",
+      "frontend/src/api/client.ts",
+      "Dockerfile.backend",
+      "Dockerfile.frontend",
+      "docker-compose.yml",
+      ".github/workflows/ci.yml",
+      "README.md",
+      "CHANGELOG.md",
+      "portfolio.json",
+      "pyproject.toml",
+      ".env.example",
+      ".gitignore"
+    ],
+    "tests": [
+      "backend/tests/test_health.py",
+      "frontend/src/App.test.tsx"
+    ]
+  },
+  {
+    "id": "routine-crud",
+      "acceptance": [
+        "FastAPI app starts at /api/health",
+        "React app builds and serves",
+        "SQLite database with migrations",
+        "Dockerfiles for backend/frontend",
+        "docker-compose with Keycloak",
+        "CI workflow runs backend/frontend tests",
+        "README with install/run/test steps"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "workout-logging",
+      "title": "Workout session logging with sets/reps/weight",
+      "status": "planned",
+      "acceptance": [
+        "Start/complete workout sessions",
+        "Log sets with reps, weight, RPE",
+        "View workout history"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "exercise-catalogue",
+      "title": "Exercise catalogue with muscle mapping",
+      "status": "planned",
+      "acceptance": [
+        "Seed catalogue with 50+ exercises",
+        "Muscle group mapping",
+        "Search/filter exercises"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "import-export",
+      "title": "Import from FitNotes/Strong/Hevy CSV",
+      "status": "planned",
+      "acceptance": [
+        "Parse FitNotes CSV",
+        "Parse Strong CSV",
+        "Parse Hevy JSON",
+        "Map to internal exercises"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "muscle-fatigue-tracking",
+      "title": "Muscle fatigue/detraining tracking",
+      "status": "planned",
+      "acceptance": [
+        "Calculate per-muscle fatigue from workouts",
+        "Show detraining timeline",
+        "Dashboard visualization"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "oidc-auth",
+      "title": "OIDC/Keycloak authentication with passkeys",
+      "status": "planned",
+      "acceptance": [
+        "Keycloak realm import",
+        "Authorization code flow with PKCE",
+        "Passkey/WebAuthn registration",
+        "Protected API endpoints"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "ai-coach",
+      "title": "Optional AI Coach (LLM-backed)",
+      "status": "planned",
+      "acceptance": [
+        "Generate routine from intake",
+        "Propose adjustments from history",
+        "Provider-agnostic (OpenAI/Anthropic/Gemini/Ollama)",
+        "Graceful fallback when unavailable"
+      ],
+      "implementation": [],
+      "tests": []
+    }
+  ]
+}

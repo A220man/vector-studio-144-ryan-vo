@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "vector-studio-144-ryan-vo",
+  "owner": "A220man",
+  "email": "ryandtvo@gmail.com",
+  "domain": "AI/ML developer tools",
+  "summary": "Work in progress: vector-studio-144-ryan-vo",
+  "workflows": [
+    "Create and manage workout routines with phase-based structure (mobility, work, accessory, cooldown)",
+    "Log workout sessions with sets, reps, weight, RPE and track muscle-level fatigue",
+    "Import training history from FitNotes, Strong, or Hevy and visualize detraining timelines"
+  ],
+  "auth": "oidc-keycloak-saml-broker",
+  "llm_providers": [
+    "openai-compatible",
+    "anthropic",
+    "gemini",
+    "ollama"
+  ],
+  "status": "work-in-progress"
+}
