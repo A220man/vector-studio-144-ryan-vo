@@ -5,12 +5,88 @@
     {
       "id": "continue-implementation",
       "title": "Continue implementation and resolve known failures",
-      "status": "in_progress",
+      "status": "done",
       "acceptance": [
         "Run checks, fix failures, and implement the next planned feature"
       ],
-      "implementation": [],
-      "tests": []
+      "implementation": [
+        "backend/app/api/health.py",
+        "backend/app/core/config.py"
+      ],
+      "tests": [
+        "backend/tests/test_health.py",
+        "frontend/src/App.test.tsx"
+      ]
+    },
+    {
+      "id": "feature-routines",
+      "title": "Routine CRUD API",
+      "status": "planned",
+      "acceptance": [
+        "Create, read, update, delete routines with phases"
+      ],
+      "implementation": [
+        "backend/app/api/routines.py"
+      ],
+      "tests": [
+        "backend/tests/test_routines.py"
+      ]
+    },
+    {
+      "id": "feature-workouts",
+      "title": "Workout session logging API",
+      "status": "planned",
+      "acceptance": [
+        "Start workout, log entries/sets, complete workout"
+      ],
+      "implementation": [
+        "backend/app/api/workouts.py"
+      ],
+      "tests": [
+        "backend/tests/test_workouts.py"
+      ]
+    },
+    {
+      "id": "feature-exercises",
+      "title": "Exercise catalogue API",
+      "status": "planned",
+      "acceptance": [
+        "Search exercises with muscle/equipment filters"
+      ],
+      "implementation": [
+        "backend/app/api/exercises.py"
+      ],
+      "tests": [
+        "backend/tests/test_exercises.py"
+      ]
+    },
+    {
+      "id": "feature-import-export",
+      "title": "Import from FitNotes/Strong/Hevy",
+      "status": "planned",
+      "acceptance": [
+        "CSV/JSON import creates routines and workouts"
+      ],
+      "implementation": [
+        "backend/app/services/import_export.py"
+      ],
+      "tests": [
+        "backend/tests/test_import.py"
+      ]
+    },
+    {
+      "id": "feature-ai-coach",
+      "title": "Optional AI routine generation",
+      "status": "planned",
+      "acceptance": [
+        "Provider-agnostic LLM calls for routine generation/adjustment"
+      ],
+      "implementation": [
+        "backend/app/services/ai_coach.py"
+      ],
+      "tests": [
+        "backend/tests/test_ai_coach.py"
+      ]
     }
   ]
 }
