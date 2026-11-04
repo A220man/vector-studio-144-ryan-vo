@@ -21,12 +21,12 @@ Tests: `backend/tests/test_health.py`, `frontend/src/App.test.tsx`
 
 ### feature-routines — Routine CRUD API
 
-Status: planned
+Status: done
 
 Acceptance:
 - Create, read, update, delete routines with phases
 
-Implementation: `backend/app/api/routines.py`
+Implementation: `backend/app/api/routines.py`, `backend/app/schemas.py`, `backend/app/models/__init__.py`
 
 Tests: `backend/tests/test_routines.py`
 
