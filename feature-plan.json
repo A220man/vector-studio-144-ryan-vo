@@ -21,12 +21,14 @@
     {
       "id": "feature-routines",
       "title": "Routine CRUD API",
-      "status": "planned",
+      "status": "done",
       "acceptance": [
         "Create, read, update, delete routines with phases"
       ],
       "implementation": [
-        "backend/app/api/routines.py"
+        "backend/app/api/routines.py",
+        "backend/app/schemas.py",
+        "backend/app/models/__init__.py"
       ],
       "tests": [
         "backend/tests/test_routines.py"

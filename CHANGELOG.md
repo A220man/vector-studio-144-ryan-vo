@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.1.0 — work-in-progress checkpoint
 
 Partial code published for continued development. Known issues: STATUS.md.
@@ -34,8 +38,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Routine CRUD API (`/api/routines`) with full create, read, update, delete operations
+- Routine exercises with phases (mobility, work, accessory, cooldown), sets, target reps, RPE, rest time
+- Pydantic schemas for all models (routines, exercises, workouts, users)
+- Backend tests for routine CRUD operations (10 tests passing)
+
 ### Planned
-- Routine CRUD API and UI
 - Workout session logging with sets/reps/weight
 - Exercise catalogue with muscle mapping
 - Import from FitNotes/Strong/Hevy
