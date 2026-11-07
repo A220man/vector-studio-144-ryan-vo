@@ -141,7 +141,7 @@ class WorkoutEntryBase(BaseModel):
     exercise_id: int
     order: int = 0
     phase: RoutinePhase = RoutinePhase.WORK
-    weight_unit: WeightUnit
+    weight_unit: WeightUnit = WeightUnit.KG
     notes: Optional[str] = None
 
 
