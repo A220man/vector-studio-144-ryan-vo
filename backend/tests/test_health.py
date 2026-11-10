@@ -8,9 +8,9 @@ import os
 
 @pytest.fixture(autouse=True)
 async def setup_test_db():
-    # Use in-memory SQLite for testing
-    os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
-    settings.database_url = "sqlite+aiosqlite:///:memory:"
+    # Use in-memory SQLite for testing with shared cache
+    os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:?cache=shared"
+    settings.database_url = "sqlite+aiosqlite:///:memory:?cache=shared"
     await reset_engine()
     await init_db()
     yield
