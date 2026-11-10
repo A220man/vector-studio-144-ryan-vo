@@ -137,7 +137,7 @@ class WorkoutEntry(Base):
 
     session = relationship("WorkoutSession", back_populates="entries")
     exercise = relationship("Exercise", back_populates="workout_entries")
-    sets = relationship("WorkoutSet", back_populates="entry", cascade="all, delete-orphan", order_by="WorkoutEntry.order")
+    sets = relationship("WorkoutSet", back_populates="entry", cascade="all, delete-orphan", order_by="WorkoutSet.order")
 
 
 class WorkoutSet(Base):

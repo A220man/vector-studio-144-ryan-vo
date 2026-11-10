@@ -2,16 +2,16 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.core.config import settings
-from app.core.database import init_db, reset_engine
+from app.core.database import init_db, reset_engine, get_session_maker
 from app.models import Exercise, ExerciseCategory, Routine, RoutineExercise, RoutinePhase
 import os
 
 
 @pytest.fixture(autouse=True)
 async def setup_test_db():
-    # Use in-memory SQLite for testing
-    os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
-    settings.database_url = "sqlite+aiosqlite:///:memory:"
+    # Use in-memory SQLite for testing with shared cache
+    os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:?cache=shared"
+    settings.database_url = "sqlite+aiosqlite:///:memory:?cache=shared"
     await reset_engine()
     await init_db()
     yield
@@ -28,9 +28,10 @@ async def client():
 @pytest.fixture
 async def sample_exercise():
     """Create a sample exercise for testing workouts."""
-    from app.core.database import get_session
+    from app.core.database import get_session_maker
 
-    async for session in get_session():
+    session_maker = get_session_maker()
+    async with session_maker() as session:
         exercise = Exercise(
             name="Push-up",
             body_part="chest",
@@ -51,7 +52,8 @@ async def sample_routine(sample_exercise):
     """Create a sample routine for testing workouts."""
     from app.core.database import get_session
 
-    async for session in get_session():
+    session_maker = get_session_maker()
+    async with session_maker() as session:
         routine = Routine(
             name="Push Day",
             description="Upper body push routine",
@@ -72,6 +74,7 @@ async def sample_routine(sample_exercise):
         )
         session.add(routine_exercise)
         await session.commit()
+        await session.refresh(routine)
         return routine
 
 

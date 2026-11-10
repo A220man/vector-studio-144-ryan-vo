@@ -198,6 +198,7 @@ class WorkoutSessionResponse(WorkoutSessionBase):
     created_at: datetime
     updated_at: datetime
     entries: List[WorkoutEntryResponse] = []
+    routine: Optional[RoutineResponse] = None
 
     class Config:
         from_attributes = True

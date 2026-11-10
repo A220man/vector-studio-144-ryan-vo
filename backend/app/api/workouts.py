@@ -9,6 +9,7 @@ from app.models import (
     User,
     Exercise,
     Routine,
+    RoutineExercise,
     WorkoutSession,
     WorkoutEntry,
     WorkoutSet,
@@ -54,7 +55,7 @@ def _load_workout_session_query(session: AsyncSession, workout_id: int, user_id:
         .options(
             selectinload(WorkoutSession.entries).selectinload(WorkoutEntry.exercise),
             selectinload(WorkoutSession.entries).selectinload(WorkoutEntry.sets),
-            selectinload(WorkoutSession.routine),
+            selectinload(WorkoutSession.routine).selectinload(Routine.exercises).selectinload(RoutineExercise.exercise),
         )
     )
 
@@ -76,6 +77,7 @@ async def create_workout(
         routine = routine_result.scalar_one_or_none()
         if not routine:
             raise HTTPException(status_code=404, detail="Routine not found")
+        print(f"DEBUG: routine found, continuing")
 
     workout = WorkoutSession(
         user_id=user_id,
@@ -96,7 +98,7 @@ async def create_workout(
             raise HTTPException(status_code=404, detail=f"Exercise {entry_data.exercise_id} not found")
 
         entry = WorkoutEntry(
-            workout_session_id=workout.id,
+            session_id=workout.id,
             exercise_id=entry_data.exercise_id,
             order=entry_data.order,
             phase=entry_data.phase,
@@ -108,7 +110,7 @@ async def create_workout(
 
         for set_data in entry_data.sets:
             set_obj = WorkoutSet(
-                workout_entry_id=entry.id,
+                entry_id=entry.id,
                 set_phase=set_data.set_phase,
                 weight=set_data.weight,
                 reps=set_data.reps,
@@ -142,7 +144,7 @@ async def list_workouts(
         .options(
             selectinload(WorkoutSession.entries).selectinload(WorkoutEntry.exercise),
             selectinload(WorkoutSession.entries).selectinload(WorkoutEntry.sets),
-            selectinload(WorkoutSession.routine),
+            selectinload(WorkoutSession.routine).selectinload(Routine.exercises).selectinload(RoutineExercise.exercise),
         )
         .order_by(WorkoutSession.started_at.desc())
         .offset(skip)
@@ -197,7 +199,7 @@ async def update_workout(
     if workout_in.routine_id is not None:
         if workout_in.routine_id > 0:
             routine_result = await session.execute(
-                select(Routine).where(Routine.id == workout_in.routine_id, Routine.user_id == user_id)
+                select(Routine).where(Routine.id == workout_in.routine_id, Routine.owner_id == user_id)
             )
             routine = routine_result.scalar_one_or_none()
             if not routine:
@@ -266,15 +268,17 @@ async def add_entry_to_workout(
     # Determine order if not provided
     if entry_in.order is None:
         max_order_result = await session.execute(
-            select(func.max(WorkoutEntry.order)).where(WorkoutEntry.workout_session_id == workout_id)
+            select(func.max(WorkoutEntry.order)).where(WorkoutEntry.session_id == workout_id)
         )
         max_order = max_order_result.scalar() or 0
         entry_in.order = max_order + 1
 
     entry = WorkoutEntry(
-        workout_session_id=workout_id,
+        session_id=workout_id,
         exercise_id=entry_in.exercise_id,
         order=entry_in.order,
+        phase=entry_in.phase,
+        weight_unit=entry_in.weight_unit or user.weight_unit,
         notes=entry_in.notes,
     )
     session.add(entry)
@@ -282,7 +286,7 @@ async def add_entry_to_workout(
 
     for set_data in entry_in.sets:
         set_obj = WorkoutSet(
-            workout_entry_id=entry.id,
+            entry_id=entry.id,
             set_phase=set_data.set_phase,
             weight=set_data.weight,
             reps=set_data.reps,
@@ -340,7 +344,7 @@ async def update_entry(
         # Create new sets
         for set_data in entry_in.sets:
             set_obj = WorkoutSet(
-                workout_entry_id=entry.id,
+                entry_id=entry.id,
                 set_phase=set_data.set_phase,
                 weight=set_data.weight,
                 reps=set_data.reps,
@@ -352,7 +356,7 @@ async def update_entry(
     await session.commit()
 
     # Reload workout with relationships
-    result = await session.execute(_load_workout_session_query(session, entry.workout_session_id, user_id))
+    result = await session.execute(_load_workout_session_query(session, entry.session_id, user_id))
     return result.unique().scalar_one()
 
 
@@ -374,7 +378,7 @@ async def delete_entry(
     if not entry:
         raise HTTPException(status_code=404, detail="Entry not found")
 
-    workout_id = entry.workout_session_id
+    workout_id = entry.session_id
     await session.delete(entry)
     await session.commit()
 
@@ -404,7 +408,7 @@ async def add_set_to_entry(
         raise HTTPException(status_code=404, detail="Entry not found")
 
     set_obj = WorkoutSet(
-        workout_entry_id=entry_id,
+        entry_id=entry_id,
         set_phase=set_in.set_phase,
         weight=set_in.weight,
         reps=set_in.reps,
@@ -415,7 +419,7 @@ async def add_set_to_entry(
     await session.commit()
 
     # Reload workout with relationships
-    result = await session.execute(_load_workout_session_query(session, entry.workout_session_id, user_id))
+    result = await session.execute(_load_workout_session_query(session, entry.session_id, user_id))
     return result.unique().scalar_one()
 
 
@@ -447,10 +451,10 @@ async def update_set(
 
     # Reload workout with relationships
     entry_result = await session.execute(
-        select(WorkoutEntry).where(WorkoutEntry.id == set_obj.workout_entry_id)
+        select(WorkoutEntry).where(WorkoutEntry.id == set_obj.entry_id)
     )
     entry = entry_result.scalar_one()
-    result = await session.execute(_load_workout_session_query(session, entry.workout_session_id, user_id))
+    result = await session.execute(_load_workout_session_query(session, entry.session_id, user_id))
     return result.unique().scalar_one()
 
 
@@ -473,14 +477,14 @@ async def delete_set(
     if not set_obj:
         raise HTTPException(status_code=404, detail="Set not found")
 
-    entry_id = set_obj.workout_entry_id
+    entry_id = set_obj.entry_id
     await session.delete(set_obj)
     await session.commit()
 
     # Reload workout with relationships
     entry_result = await session.execute(select(WorkoutEntry).where(WorkoutEntry.id == entry_id))
     entry = entry_result.scalar_one()
-    result = await session.execute(_load_workout_session_query(session, entry.workout_session_id, user_id))
+    result = await session.execute(_load_workout_session_query(session, entry.session_id, user_id))
     return result.unique().scalar_one()
 
 
