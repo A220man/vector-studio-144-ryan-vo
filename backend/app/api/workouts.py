@@ -249,7 +249,7 @@ async def add_entry_to_workout(
     user_id: int = Depends(get_current_user_id),
 ):
     """Add an exercise entry to a workout session."""
-    await ensure_user(session, user_id)
+    user = await ensure_user(session, user_id)
 
     # Verify workout exists and belongs to user
     workout_result = await session.execute(
