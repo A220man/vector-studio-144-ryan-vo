@@ -510,7 +510,7 @@ async def complete_workout(
 
     from datetime import datetime, timezone
 
-    workout.completed_at = datetime.now(timezone.utc)
+    workout.completed_at = datetime.now()
     if workout.started_at:
         duration = int((workout.completed_at - workout.started_at).total_seconds())
         workout.duration_seconds = duration
