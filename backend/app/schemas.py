@@ -35,8 +35,9 @@ class ExerciseResponse(ExerciseBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 
 
 class RoutineExerciseBase(BaseModel):
@@ -66,14 +67,15 @@ class RoutineExerciseUpdate(BaseModel):
 
 
 class RoutineExerciseResponse(RoutineExerciseBase):
-    id: int
+    id: int = Field(default_factory=int)
     routine_id: int
     created_at: datetime
     updated_at: datetime
     exercise: ExerciseResponse
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 
 
 class RoutineBase(BaseModel):
@@ -96,14 +98,15 @@ class RoutineUpdate(BaseModel):
 
 
 class RoutineResponse(RoutineBase):
-    id: int
+    id: int = Field(default_factory=int)
     owner_id: int
     created_at: datetime
     updated_at: datetime
     exercises: List[RoutineExerciseResponse] = []
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 
 
 class WorkoutSetBase(BaseModel):
@@ -127,14 +130,15 @@ class WorkoutSetUpdate(BaseModel):
 
 
 class WorkoutSetResponse(WorkoutSetBase):
-    id: int
+    id: int = Field(default_factory=int)
     entry_id: int
     order: int
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 
 
 class WorkoutEntryBase(BaseModel):
@@ -159,15 +163,16 @@ class WorkoutEntryUpdate(BaseModel):
 
 
 class WorkoutEntryResponse(WorkoutEntryBase):
-    id: int
-    session_id: int
-    created_at: datetime
-    updated_at: datetime
+    id: int = Field(default_factory=int)
+    session_id: int = Field(default=None, into_field=True)
+    created_at: datetime = Field(default=None, into_field=True)
+    updated_at: datetime = Field(default=None, into_field=True)
     sets: List[WorkoutSetResponse] = []
-    exercise: ExerciseResponse
+    exercise: ExerciseResponse = Field(default=None, into_field=True)
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 
 
 class WorkoutSessionBase(BaseModel):
@@ -190,7 +195,7 @@ class WorkoutSessionUpdate(BaseModel):
 
 
 class WorkoutSessionResponse(WorkoutSessionBase):
-    id: int
+    id: int = Field(default_factory=int)
     user_id: int
     started_at: datetime
     completed_at: Optional[datetime] = None
@@ -200,8 +205,9 @@ class WorkoutSessionResponse(WorkoutSessionBase):
     entries: List[WorkoutEntryResponse] = []
     routine: Optional[RoutineResponse] = None
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 
 
 class UserBase(BaseModel):
@@ -222,11 +228,12 @@ class UserUpdate(BaseModel):
 
 
 class UserResponse(UserBase):
-    id: int
+    id: int = Field(default_factory=int)
     is_active: bool
     is_admin: bool
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
