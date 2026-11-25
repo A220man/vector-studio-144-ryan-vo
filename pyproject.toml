@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vector-studio"
-version = "1.6.0"
+version = "1.7.0"
 description = "Self-hosted gym & body-weight tracker — plan routines, log workouts, track muscle fatigue"
 readme = "README.md"
 license = {text = "MIT"}
